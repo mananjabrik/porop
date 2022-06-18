@@ -4,12 +4,13 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 //token to id
 struct Token {
   uint256 id; // id of the token
   uint256 balance; // balance of the token
-  string contractToken; // contract token of the token
+  address contractToken; // contract token of the token
 }
 
 // global wallet
@@ -53,9 +54,9 @@ contract PoropAja {
 
   mapping(uint256 => MarketToken) private _idMarketTokens; // user create ask, or bid
   mapping(uint256 => Wallet) private _idWallets; // wallet user
-  mapping(string => Wallet) private _addresToBlance; //wallet address to balance
+  mapping(address => Wallet) private _addresToBlance; //wallet address to balance
   mapping(uint256 => GlobalWallet) private _globalWallets; // wallet global
-  mapping(string => Token) private _idTokens; // this to get balance global
+  mapping(address => Token) private _idTokens; // this to get balance global
   mapping(address => User) private _idUsers; // this to get balance global
 
   event Bid(
@@ -78,7 +79,7 @@ contract PoropAja {
   }
 
   // register wallet
-  function registerWallet(string memory _tokenContract) public payable {
+  function registerWallet(address _tokenContract) public payable {
     uint256 id = _wallet.current();
     uint256 idGlobal = _globalWallet.current();
 
@@ -115,10 +116,12 @@ contract PoropAja {
   }
 
   // topup wallet
-  function topupWallet(string memory _tokenContract, uint256 _amount) public {
+  function topupWallet(address _tokenContract, uint256 _amount) public {
     uint256 id = _addresToBlance[_tokenContract].token.id;
     uint256 idGlobal = _idTokens[_tokenContract].id;
+    ERC20 token = ERC20(_tokenContract);
 
+    token.transferFrom(msg.sender, address(this), _amount);
     // topup wallet
     _idWallets[id].token.balance += _amount;
     _idTokens[_tokenContract].balance += _amount;
@@ -131,7 +134,7 @@ contract PoropAja {
   }
 
   // get global wallet balance
-  function getGlobalWalletBalance(string memory _tokenContract)
+  function getGlobalWalletBalance(address _tokenContract)
     public
     view
     returns (uint256)
@@ -141,7 +144,7 @@ contract PoropAja {
   }
 
   // get my wallet balance
-  function getMyWalletBalance(string memory _tokenContract)
+  function getMyWalletBalance(address _tokenContract)
     public
     view
     returns (uint256)

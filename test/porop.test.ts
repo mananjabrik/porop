@@ -5,15 +5,17 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 let curency1: Currency = null as any;
 let porop: PoropAja = null as any;
-const accounts: SignerWithAddress[] = [];
-const initiateAccounts = async () => {
-  const accounts = await ethers.getSigners();
-  return accounts;
-};
+let accounts: SignerWithAddress[] = [];
+// const initiateAccounts = async () => {
+//   const accounts = await ethers.getSigners();
+//   return accounts;
+// };
 
 describe("Porop Contract Testing", function () {
   before(async () => {
-    await initiateAccounts();
+    // await initiateAccounts();
+    const akun: SignerWithAddress[] = await ethers.getSigners();
+    accounts = akun;
     const Curency1 = await ethers.getContractFactory("Currency");
     //@ts-ignore
     curency1 = await Curency1.deploy();
@@ -30,11 +32,31 @@ describe("Porop Contract Testing", function () {
   });
 
   it("User register", async () => {
+    // const accounts: SignerWithAddress[] = await ethers.getSigners();
     const user = accounts[1];
     const tokenAddress = curency1.address;
     const register = await porop.connect(user).registerWallet(tokenAddress);
     const tx = await register.wait();
-
     expect(tx.status).to.eq(1);
+  });
+
+  it("Top Up Wallet", async () => {
+    // const accounts: SignerWithAddress[] = await ethers.getSigners();
+    const user = accounts[1];
+    curency1.connect(accounts[0]).transfer(user.address, 1200);
+    const tokenAddress = curency1.address;
+    await curency1.connect(user).approve(porop.address, 1200);
+    const register = await porop.connect(user).topupWallet(tokenAddress, 1000);
+    const tx = await register.wait();
+    expect(tx.status).to.eq(1);
+  });
+
+  it("checking global wallet", async () => {
+    const globalWallet = await porop
+      .connect(accounts[0])
+      .getGlobalWalletBalance(curency1.address);
+
+    console.log("global balance", globalWallet);
+    expect(globalWallet).to.eq(curency1.address);
   });
 });
