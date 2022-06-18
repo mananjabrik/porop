@@ -125,13 +125,10 @@ contract PoropAja {
     // topup wallet
     _idWallets[id].token.balance += _amount;
 
-    // update global wallet
-    uint256 last = _globalWallets[idGlobal].token.balance;
-
     // global wallet invest
     _idTokens[_tokenContract] = Token({
       id: idGlobal,
-      balance: last + _amount,
+      balance: _idTokens[_tokenContract].balance + _amount,
       contractToken: _tokenContract
     });
   }

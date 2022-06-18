@@ -64,7 +64,7 @@ describe("Porop Contract Testing", function () {
     // user topup wallet
     await curency1.connect(accounts[0]).transfer(user.address, 1200);
     await curency1.connect(user).approve(porop.address, 1200);
-    const topup = await porop.connect(user).topupWallet(tokenAddress, 1000);
+    const topup = await porop.connect(user).topupWallet(tokenAddress, 1200);
     const tx2 = await topup.wait();
     expect(tx2.status).to.eq(1);
     //balance user 2 must be 1000
