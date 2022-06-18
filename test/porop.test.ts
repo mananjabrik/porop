@@ -49,14 +49,35 @@ describe("Porop Contract Testing", function () {
     const register = await porop.connect(user).topupWallet(tokenAddress, 1000);
     const tx = await register.wait();
     expect(tx.status).to.eq(1);
+
+    //balance user 2 must be 1000
+    const balance = await porop.connect(user).getMyWalletBalance(tokenAddress);
+    console.log("user 1 balance", balance);
   });
 
-  it("checking global wallet", async () => {
+  it("new User Register", async () => {
+    const user = accounts[2];
+    const tokenAddress = curency1.address;
+    const register = await porop.connect(user).registerWallet(tokenAddress);
+    const tx = await register.wait();
+    expect(tx.status).to.eq(1);
+    // user topup wallet
+    await curency1.connect(accounts[0]).transfer(user.address, 1200);
+    await curency1.connect(user).approve(porop.address, 1200);
+    const topup = await porop.connect(user).topupWallet(tokenAddress, 1000);
+    const tx2 = await topup.wait();
+    expect(tx2.status).to.eq(1);
+    //balance user 2 must be 1000
+    const balance = await porop.connect(user).getMyWalletBalance(tokenAddress);
+    console.log("user 2 balance", balance);
+  });
+
+  it("checking global balance from user invested", async () => {
     const globalWallet = await porop
       .connect(accounts[0])
       .getGlobalWalletBalance(curency1.address);
 
     console.log("global balance", globalWallet);
-    expect(globalWallet).to.eq(curency1.address);
+    expect(globalWallet).to.eq(2000);
   });
 });

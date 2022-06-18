@@ -124,13 +124,16 @@ contract PoropAja {
     token.transferFrom(msg.sender, address(this), _amount);
     // topup wallet
     _idWallets[id].token.balance += _amount;
-    _idTokens[_tokenContract].balance += _amount;
 
     // update global wallet
-    _globalWallets[idGlobal].token.balance += _amount;
+    uint256 last = _globalWallets[idGlobal].token.balance;
 
     // global wallet invest
-    _idTokens[_tokenContract].balance += _amount;
+    _idTokens[_tokenContract] = Token({
+      id: idGlobal,
+      balance: last + _amount,
+      contractToken: _tokenContract
+    });
   }
 
   // get global wallet balance
@@ -139,8 +142,8 @@ contract PoropAja {
     view
     returns (uint256)
   {
-    uint256 id = _idTokens[_tokenContract].id;
-    return _globalWallets[id].token.balance;
+    uint256 balance = _idTokens[_tokenContract].balance;
+    return balance;
   }
 
   // get my wallet balance
@@ -151,5 +154,14 @@ contract PoropAja {
   {
     uint256 id = _addresToBlance[_tokenContract].token.id;
     return _idWallets[id].token.balance;
+  }
+
+  // get all global wallet address
+  function getAllGlobalWalletAddress() public view returns (address[] memory) {
+    address[] memory result;
+    for (uint256 i = 0; i < _globalWallet.current(); i++) {
+      result[i] = _globalWallets[i].token.contractToken;
+    }
+    return result;
   }
 }
