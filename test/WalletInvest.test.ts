@@ -32,31 +32,95 @@ describe("first", () => {
 
   it("should have owner", async () => {
     const owner = await walletInvest.owner();
-    await curency1.connect(accounts[0]).transfer(accounts[1].address, 3200);
-    await curency1.connect(accounts[0]).transfer(accounts[2].address, 3200);
-    await curency2.connect(accounts[0]).transfer(accounts[1].address, 3200);
-
-    console.log(owner);
   });
-  it("shoul create wallet for new user", async () => {
+
+  it("User 1 and User 2 Have Balance 10000", async () => {
+    //user 1
+    await curency1.connect(accounts[0]).transfer(accounts[1].address, 10000);
+    await curency2.connect(accounts[0]).transfer(accounts[1].address, 10000);
+    //user 2
+    await curency1.connect(accounts[0]).transfer(accounts[2].address, 10000);
+    await curency2.connect(accounts[0]).transfer(accounts[2].address, 10000);
+  });
+
+  it("user 1 approve allowance", async () => {
+    const user1 = accounts[1];
+    const approveToken1 = await curency1
+      .connect(user1)
+      .approve(walletInvest.address, 3200);
+    const approveToken2 = await curency2
+      .connect(user1)
+      .approve(walletInvest.address, 3200);
+
+    const tx1 = await approveToken1.wait();
+    const tx2 = await approveToken2.wait();
+
+    expect(tx1.status).to.eq(1);
+    expect(tx2.status).to.eq(1);
+  });
+
+  it("user 2 approve allowance", async () => {
+    const user1 = accounts[2];
+    const approveToken1 = await curency1
+      .connect(user1)
+      .approve(walletInvest.address, 3200);
+    const approveToken2 = await curency2
+      .connect(user1)
+      .approve(walletInvest.address, 3200);
+
+    const tx1 = await approveToken1.wait();
+    const tx2 = await approveToken2.wait();
+
+    expect(tx1.status).to.eq(1);
+    expect(tx2.status).to.eq(1);
+  });
+
+  it("user antri jual", async () => {
     const user = accounts[1];
-    const tokenAddress = curency1.address;
-    const tokenAddress2 = curency2.address;
+    const tokenAddress = curency1.address; // user memiliki token ini
+    const tokenAddress2 = curency2.address; // user ingin token ini
+    const jual = await walletInvest.connect(user).selMyTokenWith(
+      tokenAddress, // token yang ingin dijual
+      tokenAddress2, // token yang akan diterima
+      1, // jumlah token yang ingin dijual
+      2 // jumlah token yang akan diterima
+    );
+    const tx = await jual.wait();
+    expect(tx.status).to.eq(1);
+  });
 
-    await curency1.connect(user).approve(walletInvest.address, 3200);
-    await curency2.connect(user).approve(walletInvest.address, 3200);
-    await curency1.connect(accounts[2]).approve(walletInvest.address, 3200);
-
-    walletInvest.connect(user).investToken(tokenAddress, 1000);
-    await walletInvest.connect(user).investToken(tokenAddress2, 1000);
-    await walletInvest.connect(user).investToken(tokenAddress, 1000);
-    await walletInvest.connect(accounts[2]).investToken(tokenAddress, 1000);
-
+  it("check Balance on Contract", async () => {
+    const user = accounts[1];
+    const tokenAddress = curency1.address; // user memiliki token ini
+    const tokenAddress2 = curency2.address; // user ingin token ini
     const balance = await walletInvest
       .connect(user)
-      .getTotalInvestByToken(curency2.address);
+      .getTotalInvestByToken(tokenAddress);
+    console.log("value:", balance);
+  });
 
-    console.log("balance on state address", balance);
-    // expect(tx.status).to.eq(1);
+  it("user beli langsung token", async () => {
+    const user = accounts[2];
+    const tokenAddress = curency1.address; // user memiliki token ini
+    // const tokenAddress2 = curency2.address; // user ingin token ini
+    const tokenAddressToId = await walletInvest
+      .connect(user)
+      .getAddressTokenId(tokenAddress);
+
+    const userBuy = await walletInvest
+      .connect(user)
+      .beliLangsung(tokenAddressToId, 1);
+
+    const tx = await userBuy.wait();
+    expect(tx.status).to.eq(1);
+  });
+
+  it("balance contract from token address 1 mustbe 0", async () => {
+    const user = accounts[1];
+    const tokenAddress = curency1.address; // user memiliki token ini
+    const balance = await walletInvest
+      .connect(user)
+      .getTotalInvestByToken(tokenAddress);
+    console.log("value:", balance);
   });
 });
