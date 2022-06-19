@@ -2,3 +2,4 @@ node_modules
 typechain-types
 cache
 .env
+artifacts

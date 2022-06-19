@@ -67,7 +67,7 @@ contract WalletInvest {
     return total;
   }
 
-  function beliLangsung(uint256 _id, uint256 _amount) public payable {
+  function swapToken(uint256 _id, uint256 _amount) public payable {
     // require(_token != address(0), "token is not valid");
 
     // thist contract transfer token to user

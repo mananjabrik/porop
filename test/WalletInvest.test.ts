@@ -109,13 +109,13 @@ describe("first", () => {
 
     const userBuy = await walletInvest
       .connect(user)
-      .beliLangsung(tokenAddressToId, 1);
+      .swapToken(tokenAddressToId, 1);
 
     const tx = await userBuy.wait();
     expect(tx.status).to.eq(1);
   });
 
-  it("balance contract from token address 1 mustbe 0", async () => {
+  it("balance contract from token1 mustbe 0", async () => {
     const user = accounts[1];
     const tokenAddress = curency1.address; // user memiliki token ini
     const balance = await walletInvest
