@@ -68,8 +68,6 @@ contract WalletInvest {
   }
 
   function swapToken(uint256 _id, uint256 _amount) public payable {
-    // require(_token != address(0), "token is not valid");
-
     // thist contract transfer token to user
     MarketItem storage marketWallet = idToMarketItems[_id];
     ERC20 tokenGet = ERC20(marketWallet.tokenForSale);
