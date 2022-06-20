@@ -45,3 +45,14 @@ npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 
 For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
 # porop
+
+![image](https://user-images.githubusercontent.com/10292748/174655866-7d772df6-772c-4ecf-b12f-38e18ceb02c4.png)
+
+# Porop Exchange
+This contract is made for exchange
+
+## How contracts work
+User		|       Function  		 | change token |  with  | Contract 													 																														  |
+------- | ---------------------|--------------|--------|--------------------------------------------------------------------------------------------------|
+User 1  | User Request Exchange| Token A			| Token B| * user sending Token A to contract. * Contrack Keep token A after some user exchanged token  		|
+User 2	| User Exchanged			 | Token B			| TokenA | * User Sending Token B to User 1. * Contract Sending Token A to User 2														|
