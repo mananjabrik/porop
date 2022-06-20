@@ -1,4 +1,4 @@
-import { writeFile, writeFileSync, readFileSync } from "fs";
+import { writeFile, writeFileSync } from "fs";
 
 // We require the Hardhat Runtime Environment explicitly here. This is optional
 // but useful for running the script in a standalone fashion through `node <script>`.
@@ -17,15 +17,13 @@ async function main() {
 
   // We get the contract to deploy
 
-  const WalletInvest = await ethers.getContractFactory("WalletInvest");
-  const walletDeploy = await upgrades.deployProxy(WalletInvest);
+  const SiduCoin = await ethers.getContractFactory("SiduCoin");
+  const siduCoinDeploy = await SiduCoin.deploy();
 
-  await walletDeploy.deployed();
+  await siduCoinDeploy.deployed();
 
-  console.log("WalletInvest Deployed to :", walletDeploy.address);
-  const contractSave = `export const WALLET_INVEST_ADDRESS = "${walletDeploy.address}";`;
-  const data = readFileSync(".env.export.deploy", "utf8") + "\n" + contractSave;
-
+  console.log("Sidu Coin Deployed to :", siduCoinDeploy.address);
+  const data = `SIDU_COIN_ADDRESS="${siduCoinDeploy.address}";`;
   writeFile(".env.export.deploy", data, function (err) {
     if (err) throw err;
     console.log("File saved!");
