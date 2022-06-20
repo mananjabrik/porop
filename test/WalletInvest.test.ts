@@ -85,7 +85,7 @@ describe("test wallet invest", () => {
       tokenAddress, // token yang ingin dijual
       tokenAddress2, // token yang akan diterima
       1000, // jumlah token yang ingin dijual
-      2 // jumlah token yang akan diterima
+      2 // harga tiap2 token
     );
     const tx = await jual.wait();
     expect(tx.status).to.eq(1);
