@@ -16,6 +16,7 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+
   const WalletInvest = await ethers.getContractFactory("WalletInvest");
   const walletDeploy = await upgrades.deployProxy(WalletInvest);
 
@@ -31,6 +32,7 @@ async function main() {
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
+
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

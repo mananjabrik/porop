@@ -8,7 +8,10 @@
   "scripts": {
     "test": "npx hardhat test test/porop.test.ts",
     "compile": "npx hardhat clean && npx hardhat compile",
-    "test-walletInvest": "npx hardhat test test/walletInvest.test.ts"
+    "test-walletInvest": "npx hardhat test test/walletInvest.test.ts",
+    "deploy-porop-local":"npx hardhat run --network manan scripts/deploy.ts",
+    "deploy-token-local":"npx hardhat run --network manan scripts/deploy.token.ts",
+    "deploy-token2-local":"npx hardhat run --network manan scripts/deploy.token2.ts"
   },
   "dependencies": {
     "@nomiclabs/hardhat-etherscan": "^3.1.0",

@@ -24,7 +24,7 @@ async function main() {
 
   await walletDeploy.deployed();
 
-  console.log("WalletInvest Deployed to :", walletDeploy.address);
+  console.log("succes Upgraded to :", walletDeploy.address);
   const data = `export const WALLET_INVEST_ADDRESS = "${walletDeploy.address}";`;
   writeFile("contractAddress.ts", data, function (err) {
     if (err) throw err;

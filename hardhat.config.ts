@@ -23,7 +23,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const mnemonic = process.env.MNEMONIC !== undefined ? process.env.MNEMONIC : "";
+const mnemonic = process.env.MENEMONIC_KEY;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
@@ -32,6 +32,14 @@ const config: HardhatUserConfig = {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    hardhat: {
+      accounts: { mnemonic: mnemonic },
+    },
+    manan: {
+      url: "http://127.0.0.1:8545",
+      chainId: 31337,
+      accounts: { mnemonic: mnemonic },
     },
     testnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
