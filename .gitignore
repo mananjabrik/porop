@@ -3,3 +3,4 @@ node_modules
 typechain-types
 cache
 .env
+.env.export.deploy

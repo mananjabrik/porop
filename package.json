@@ -11,7 +11,7 @@
     "test-walletInvest": "npx hardhat test test/walletInvest.test.ts",
     "deploy-porop-local":"npx hardhat run --network manan scripts/deploy.ts",
     "deploy-token-local":"npx hardhat run --network manan scripts/deploy.token.ts",
-    "deploy-porop-tesnet":"npx hardhat run --network testnet scripts/deploy.ts",
+    "deploy-porop-testnet":"npx hardhat run --network testnet scripts/deploy.ts",
     "deploy-token-testnet":"npx hardhat run --network testnet scripts/deploy.token.ts"
   },
   "dependencies": {

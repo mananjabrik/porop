@@ -1,0 +1,141 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x6ABd312baeEd16f1F076A0856B1a31BFF71B35d9",
+    "txHash": "0xb5f070d791e240dcaa3bccb16d8fcbd552f4b90a574f9f93cd22385c5a3e389f"
+  },
+  "proxies": [
+    {
+      "address": "0x694E8E9F31f1Fa20394F3eA31CC060bc545E7255",
+      "txHash": "0xda85f2e3ed0f6976d131e79562371e1e1a76ea244a6413f2534770a96e4a71cc",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "63dba5e80ed8bb045b6d986bafc07e51b0b7a25e615c314f61c9cc6a3493ceb9": {
+      "address": "0xcd7E0176eA651CD5da9542A8250A7974c507E8C8",
+      "txHash": "0x0f873fbf6f1f46bf15850e791b30f91b591bb10d6ad69fcee5daf0af55069cbb",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "antriJualId",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_struct(Counter)1206_storage",
+            "contract": "WalletInvest",
+            "src": "contracts\\WalletInvest.sol:18"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "WalletInvest",
+            "src": "contracts\\WalletInvest.sol:19"
+          },
+          {
+            "label": "idToMarketItems",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)1292_storage)",
+            "contract": "WalletInvest",
+            "src": "contracts\\WalletInvest.sol:20"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)1292_storage)": {
+            "label": "mapping(uint256 => struct MarketItem)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Counter)1206_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(MarketItem)1292_storage": {
+            "label": "struct MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "stock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "tokenForSale",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "tokenForBuy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
