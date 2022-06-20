@@ -38,7 +38,7 @@
             "label": "antriJualId",
             "offset": 0,
             "slot": "1",
-            "type": "t_struct(Counter)1101_storage",
+            "type": "t_struct(Counter)1267_storage",
             "contract": "WalletInvest",
             "src": "contracts\\WalletInvest.sol:18"
           },
@@ -54,7 +54,7 @@
             "label": "idToMarketItems",
             "offset": 0,
             "slot": "3",
-            "type": "t_mapping(t_uint256,t_struct(MarketItem)1187_storage)",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)1799_storage)",
             "contract": "WalletInvest",
             "src": "contracts\\WalletInvest.sol:20"
           }
@@ -68,11 +68,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_mapping(t_uint256,t_struct(MarketItem)1187_storage)": {
+          "t_mapping(t_uint256,t_struct(MarketItem)1799_storage)": {
             "label": "mapping(uint256 => struct MarketItem)",
             "numberOfBytes": "32"
           },
-          "t_struct(Counter)1101_storage": {
+          "t_struct(Counter)1267_storage": {
             "label": "struct Counters.Counter",
             "members": [
               {
@@ -84,7 +84,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(MarketItem)1187_storage": {
+          "t_struct(MarketItem)1799_storage": {
             "label": "struct MarketItem",
             "members": [
               {
