@@ -3,14 +3,6 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-// creat spesification about apps
-struct WalletUser {
-  uint256 id;
-  address owner;
-  address token;
-  uint256 balance;
-}
-
 struct MarketItem {
   uint256 itemId;
   uint256 price;
@@ -22,81 +14,49 @@ struct MarketItem {
 
 contract WalletInvest {
   using Counters for Counters.Counter;
-
-  Counters.Counter private walletId;
-  Counters.Counter private globalWalletId;
   Counters.Counter private antriJualId;
-  Counters.Counter private antriBeliId;
-
   address public owner; // owner
-
-  mapping(uint256 => WalletUser) public idToWallets; // wallet user
-
   mapping(uint256 => MarketItem) public idToMarketItems; // antri Jual
-
-  event UserInvestToken(
-    address indexed sender,
+  event CreateMarket(
     uint256 indexed id,
-    address indexed token,
-    uint256 balance
+    uint256 price,
+    uint256 stock,
+    address tokenForSale,
+    address tokenForBuy,
+    address owner
   );
 
   constructor() {
     owner = msg.sender;
   }
 
-  function investToken(address _token, uint256 _amoun) public payable {
-    require(_token != address(0), "token is not valid");
-
-    //transfer token to this contract
-    ERC20 token = ERC20(_token);
-    require(token.balanceOf(msg.sender) >= _amoun, "balance is not enough");
-    token.transferFrom(msg.sender, address(this), _amoun);
-
-    //create wallet
-    uint256 id = walletId.current();
-    walletId.increment();
-    idToWallets[id] = WalletUser(id, msg.sender, _token, _amoun);
-
-    emit UserInvestToken(msg.sender, id, _token, _amoun);
-  }
-
-  function getTotalInvestByToken(address _token) public view returns (uint256) {
-    ERC20 token = ERC20(_token);
-    uint256 total = token.balanceOf(address(this));
-    return total;
-  }
-
-  function swapToken(uint256 _id, uint256 _amount) public payable {
-    // thist contract transfer token to user
+  // thist contract transfer token to user
+  function _contractTransfer(uint256 _id, uint256 _amount) private {
     MarketItem storage marketWallet = idToMarketItems[_id];
-    ERC20 tokenGet = ERC20(marketWallet.tokenForSale);
+    ERC20 tokenInside = ERC20(marketWallet.tokenForSale);
     require(marketWallet.stock >= _amount, "contract invest is not enough");
-    tokenGet.transfer(msg.sender, _amount);
+    tokenInside.transfer(msg.sender, _amount);
+  }
 
-    //user transfer token to this contract
+  //user payyer transfer token to owner on market item
+  function _payerTransfer(uint256 _id, uint256 _amount) private {
+    MarketItem storage marketWallet = idToMarketItems[_id];
     ERC20 swap = ERC20(marketWallet.tokenForBuy);
     uint256 pricePerToken = marketWallet.price * _amount;
     require(
       swap.balanceOf(msg.sender) >= pricePerToken,
       "balance user is not enough"
     );
-    swap.transferFrom(msg.sender, address(this), pricePerToken);
-
-    //update Stock
-    uint256 currentStock = marketWallet.stock;
-    marketWallet.stock = currentStock - _amount;
+    swap.transferFrom(msg.sender, marketWallet.owner, pricePerToken);
   }
 
-  function getAddressTokenId(address _token) public view returns (uint256) {
-    uint256 id = 0;
-    for (uint256 i = 0; i < antriJualId.current(); i++) {
-      if (idToWallets[i].token == _token) {
-        id = idToWallets[i].id;
-        break;
-      }
-    }
-    return id;
+  function swapToken(uint256 _id, uint256 _amount) public payable {
+    _contractTransfer(_id, _amount);
+    _payerTransfer(_id, _amount);
+    //update Stock
+    MarketItem storage marketWallet = idToMarketItems[_id];
+    uint256 currentStock = marketWallet.stock;
+    marketWallet.stock = currentStock - _amount;
   }
 
   function selMyTokenWith(
@@ -123,5 +83,24 @@ contract WalletInvest {
       owner: msg.sender,
       stock: _stock
     });
+  }
+
+  function getTotalInvestByToken(address _token) public view returns (uint256) {
+    ERC20 token = ERC20(_token);
+    uint256 total = token.balanceOf(address(this));
+    return total;
+  }
+
+  function getListTokenById(uint256 _id)
+    public
+    view
+    returns (MarketItem memory)
+  {
+    MarketItem storage marketWallet = idToMarketItems[_id];
+    return marketWallet;
+  }
+
+  function getTotalMarket() public view returns (uint256) {
+    return antriJualId.current();
   }
 }

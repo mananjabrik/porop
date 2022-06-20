@@ -1,5 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 import { WalletInvest, Currency } from "../typechain-types";
 
@@ -115,17 +116,33 @@ describe("first", () => {
   it("user beli 100 token1 dengan token 2", async () => {
     const user = accounts[2];
     const tokenAddress = curency1.address; // user memiliki token ini
-    // const tokenAddress2 = curency2.address; // user ingin token ini
-    const tokenAddressToId = await walletInvest
-      .connect(user)
-      .getAddressTokenId(tokenAddress);
 
-    const userBuy = await walletInvest
-      .connect(user)
-      .swapToken(tokenAddressToId, 100);
+    const balanceBefore = await curency1.connect(user).balanceOf(user.address);
+    const getTotalMarket = await walletInvest.getTotalMarket();
 
+    const getId = async (total: BigNumber) => {
+      let id = 0;
+      for (let i = 0; i < getTotalMarket.toNumber(); i++) {
+        const findTokenId = await walletInvest
+          .connect(user)
+          .getListTokenById(0);
+        if (findTokenId.tokenForBuy === tokenAddress) {
+          id = findTokenId.itemId.toNumber();
+          break;
+        }
+      }
+      return id;
+    };
+
+    const id = await getId(getTotalMarket);
+
+    const userBuy = await walletInvest.connect(user).swapToken(id, 100);
     const tx = await userBuy.wait();
+
+    const balanceAfter = await curency1.connect(user).balanceOf(user.address);
+
     expect(tx.status).to.eq(1);
+    expect(balanceAfter.toNumber()).to.eq(balanceBefore.toNumber() + 100);
   });
 
   it("balance contract from token1 mustbe 900", async () => {
@@ -135,5 +152,29 @@ describe("first", () => {
       .connect(user)
       .getTotalInvestByToken(tokenAddress);
     expect(balance.toNumber()).to.eq(900);
+  });
+
+  it("user 1 must have token2 address 200", async () => {
+    const user = accounts[1];
+    const balance = await curency2.connect(user).balanceOf(user.address);
+    expect(balance.toNumber()).to.eq(10200);
+  });
+
+  it("User get all available token", async () => {
+    const user = accounts[1];
+    const getTotalMarket = await walletInvest.getTotalMarket();
+
+    const getListToken = async () => {
+      let listToken = [];
+      for (let i = 0; i < getTotalMarket.toNumber(); i++) {
+        const findToken = await walletInvest.connect(user).getListTokenById(i);
+        listToken.push(findToken);
+      }
+      return listToken;
+    };
+
+    const listToken = await getListToken();
+
+    console.log(listToken);
   });
 });
