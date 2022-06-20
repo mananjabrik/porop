@@ -2,6 +2,7 @@
 pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 struct MarketItem {
   uint256 itemId;
@@ -12,7 +13,7 @@ struct MarketItem {
   address owner;
 }
 
-contract WalletInvest {
+contract WalletInvest is Initializable {
   using Counters for Counters.Counter;
   Counters.Counter private antriJualId;
   address public owner; // owner
@@ -26,7 +27,11 @@ contract WalletInvest {
     address owner
   );
 
-  constructor() {
+  //   constructor() {
+  //     _disableInitializers();
+  //   }
+
+  function initialize() public initializer {
     owner = msg.sender;
   }
 

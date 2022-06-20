@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { BigNumber } from "ethers";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { WalletInvest, Currency } from "../typechain-types";
 
 let walletInvest: WalletInvest = null as any;
@@ -10,13 +10,13 @@ let curency2: Currency = null as any;
 
 let accounts: SignerWithAddress[] = [];
 
-describe("first", () => {
+describe("test wallet invest", () => {
   before(async () => {
     const Acounts: SignerWithAddress[] = await ethers.getSigners();
     accounts = Acounts;
 
     const WalletInvest = await ethers.getContractFactory("WalletInvest");
-    const walletDeploy = await WalletInvest.deploy();
+    const walletDeploy = await upgrades.deployProxy(WalletInvest);
     //@ts-ignore
     walletInvest = await walletDeploy.deployed();
 
@@ -33,6 +33,7 @@ describe("first", () => {
 
   it("should have owner", async () => {
     const owner = await walletInvest.owner();
+    expect(owner).to.equal(accounts[0].address);
   });
 
   it("User 1 and User 2 Have Balance 10000", async () => {
@@ -175,6 +176,6 @@ describe("first", () => {
 
     const listToken = await getListToken();
 
-    console.log(listToken);
+    expect(listToken.length).to.eq(2);
   });
 });
